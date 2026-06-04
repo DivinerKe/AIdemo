@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Agnes AI</string>
+    <string name="title_agnes_demo">Agnes AI 调用示例</string>
+    <string name="status_ready">在 platform.agnes-ai.com 创建 API Key 后填入下方</string>
+    <string name="status_key_loaded">已从 local.properties 加载 API Key</string>
+    <string name="status_requesting">正在请求 Agnes AI…</string>
+    <string name="status_done">请求完成</string>
+    <string name="status_error">错误: %1$s</string>
+    <string name="hint_api_key">API Key (Bearer)</string>
+    <string name="hint_prompt">输入你的问题</string>
+    <string name="btn_send">发送到 Agnes AI</string>
+    <string name="label_response">AI 回复:</string>
+    <string name="error_api_key_empty">请输入 API Key</string>
+    <string name="error_prompt_empty">请输入问题内容</string>
+    <string name="overlay_permission_hint">悬浮窗权限：未授权（需开启「显示在其他应用上层」）</string>
+    <string name="overlay_permission_granted">悬浮窗权限：已授权</string>
+    <string name="overlay_permission_required">请先授权悬浮窗权限</string>
+    <string name="btn_grant_overlay">授权悬浮窗</string>
+    <string name="btn_start_float">显示悬浮窗</string>
+    <string name="btn_stop_float">关闭悬浮窗</string>
+    <string name="float_started">悬浮窗已显示，可返回桌面使用</string>
+    <string name="float_stopped">悬浮窗已关闭</string>
+    <string name="float_panel_title">Agnes AI</string>
+    <string name="btn_float_close">收起</string>
+    <string name="float_notification_channel">悬浮窗服务</string>
+    <string name="float_notification_title">Agnes AI 悬浮窗运行中</string>
+    <string name="float_notification_text">点击圆球打开对话，拖动可移动位置</string>
+    <string name="fullscreen_section_title">全屏对话（可选）</string>
+    <string name="notification_permission_denied">未授予通知权限，悬浮窗可能不稳定</string>
+    <string name="float_add_failed">悬浮窗显示失败: %1$s</string>
+    <string name="float_bubble_desc">Agnes AI 悬浮助手</string>
+    <string name="device_info_permission_hint">设备信息权限：未全部授权（IMEI、位置需单独授权）</string>
+    <string name="device_info_permission_granted">设备信息权限：已授权（IMEI 仍可能因系统限制无法读取）</string>
+    <string name="btn_grant_device_info">授权设备信息（电话/位置）</string>
+    <string name="device_info_permission_denied">部分设备信息权限未授予，AI 只能使用已开放的数据</string>
+</resources>
