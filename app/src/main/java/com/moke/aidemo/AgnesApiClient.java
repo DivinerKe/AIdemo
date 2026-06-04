@@ -80,13 +80,22 @@ public class AgnesApiClient {
         String now = ZonedDateTime.now().format(
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z", Locale.getDefault()));
         String deviceInfo = DeviceInfoProvider.buildSummary(context);
-        return "你是一个有帮助的 AI 助手。"
+        String appList = InstalledAppsCatalog.load(context).formatForSystemPrompt();
+        return "你是一个有帮助的 AI 助手，运行在用户手机上的 Agnes 悬浮助手 App 中。"
                 + "用户设备的当前本地时间是：" + now + "。"
                 + "回答与日期、时间、星期相关的问题时，请以上述时间为准。"
                 + "\n\n以下为用户 Android 设备的基础信息（由客户端采集，可能因权限或系统限制部分字段不可用）：\n"
                 + deviceInfo
                 + "\n\n回答与设备相关的问题时请优先依据以上信息；不要编造未提供的标识符或位置。"
-                + "涉及隐私的标识符（如 IMEI、位置）仅在用户明确询问时再说明。";
+                + "涉及隐私的标识符（如 IMEI、位置）仅在用户明确询问时再说明。"
+                + "\n\n【打开应用】当用户明确要求打开某个已安装应用或系统设置页时："
+                + "先用一两句中文简短说明，然后在回复末尾单独追加一行指令（用户看不到该标签内的 JSON 会被客户端解析执行）："
+                + "\n<agent_action>{\"action\":\"open_app\",\"package\":\"包名\"}</agent_action>"
+                + "\n其中 action 仅允许：open_app（须带 package）、open_settings、open_wifi_settings。"
+                + "open_app 的 package 必须从下方「已安装应用列表」中选取，禁止编造未列出的包名。"
+                + "若用户要开的应用不在列表中，说明未找到并建议检查应用名，不要输出 agent_action。"
+                + "\n已安装应用列表（显示名|包名，每行一个）：\n"
+                + appList;
     }
 
     private HttpURLConnection openConnection(String apiKey) throws Exception {

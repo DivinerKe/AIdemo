@@ -57,16 +57,29 @@ public class ChatController {
             return;
         }
 
+        Context appContext = context.getApplicationContext();
+        String quickPackage = InstalledAppsCatalog.matchPackageForOpenPhrase(appContext, prompt);
+        if (quickPackage != null) {
+            InstalledAppsCatalog.Snapshot apps = InstalledAppsCatalog.load(appContext);
+            AgentActionExecutor.Result result = AgentActionExecutor.openApp(appContext, apps, quickPackage);
+            String label = apps.labelForPackage(quickPackage);
+            String text = result.success
+                    ? context.getString(R.string.agent_open_app_ok, label)
+                    : context.getString(R.string.agent_action_failed, result.message);
+            tvResponse.setText(text);
+            toast(text);
+            return;
+        }
+
         setLoading(true);
         tvResponse.setText("");
 
-        agnesApiClient.chat(context.getApplicationContext(), apiKey, prompt, new AgnesApiClient.Callback() {
+        agnesApiClient.chat(appContext, apiKey, prompt, new AgnesApiClient.Callback() {
             @Override
             public void onSuccess(String reply) {
                 mainHandler.post(() -> {
                     setLoading(false);
-                    tvResponse.setText(reply);
-                    scrollResponse.post(() -> scrollResponse.fullScroll(View.FOCUS_DOWN));
+                    handleAgentReply(reply);
                 });
             }
 
@@ -80,6 +93,41 @@ public class ChatController {
                 });
             }
         });
+    }
+
+    private void handleAgentReply(String reply) {
+        AgentActionParser.ParseResult parsed = AgentActionParser.parse(reply);
+        String text = parsed.displayText;
+        if (parsed.action != null) {
+            AgentActionExecutor.Result result = AgentActionExecutor.execute(context, parsed.action);
+            String actionName = parsed.action.optString("action", "");
+            if ("open_app".equals(actionName) && result.success) {
+                String pkg = parsed.action.optString("package", "");
+                String label = InstalledAppsCatalog.load(context).labelForPackage(pkg);
+                text = appendLine(text, context.getString(R.string.agent_open_app_ok, label));
+            } else if (result.success) {
+                text = appendLine(text, context.getString(R.string.agent_action_ok));
+            } else {
+                text = appendLine(text, context.getString(R.string.agent_action_failed, result.message));
+            }
+            if (result.success) {
+                toast(R.string.agent_action_ok);
+            } else {
+                toast(result.message);
+            }
+        }
+        if (text.isEmpty()) {
+            text = reply != null ? reply : "";
+        }
+        tvResponse.setText(text);
+        scrollResponse.post(() -> scrollResponse.fullScroll(View.FOCUS_DOWN));
+    }
+
+    private static String appendLine(String base, String line) {
+        if (base == null || base.isEmpty()) {
+            return line;
+        }
+        return base + "\n\n" + line;
     }
 
     private void setLoading(boolean loading) {

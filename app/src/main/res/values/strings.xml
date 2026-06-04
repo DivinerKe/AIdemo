@@ -33,4 +33,7 @@
     <string name="device_info_permission_granted">设备信息权限：已授权（IMEI 仍可能因系统限制无法读取）</string>
     <string name="btn_grant_device_info">授权设备信息（电话/位置）</string>
     <string name="device_info_permission_denied">部分设备信息权限未授予，AI 只能使用已开放的数据</string>
+    <string name="agent_open_app_ok">已为你打开：%1$s</string>
+    <string name="agent_action_ok">已执行操作</string>
+    <string name="agent_action_failed">无法执行：%1$s</string>
 </resources>
